@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import SiteHeader from './components/siteHeader'
 import SiteFooter from './components/siteFooter'
-
-
+import AboutUs from './components/aboutUs'
+import Services from './components/services'
+import Doctors from './components/doctors'
 function App() {
   
   return (
@@ -10,9 +11,9 @@ function App() {
       <SiteHeader />
 
       <main className='flex-1'>
-        
-        
-
+        <AboutUs/>
+        <Services/>
+        <Doctors/>
       </main>
       
       <SiteFooter />

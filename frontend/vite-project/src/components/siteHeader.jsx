@@ -21,7 +21,7 @@ export default function siteHeader() {
           </span>
         </div>
 
-        {/* Boton (Mobile) */}
+        {/* Boton version movil */}
         <button
           className="md:hidden text-gray-700 hover:text-blue-700"
           onClick={toggleMenu}
@@ -51,7 +51,7 @@ export default function siteHeader() {
             </li>
 
             <li>
-                <a href="#agendar" className="hover:text-blue-600 transition">
+                <a href="#citas" className="hover:text-blue-600 transition">
                 Agendar Cita
                 </a>
             </li>
@@ -72,7 +72,7 @@ export default function siteHeader() {
         </nav>
       </div>
 
-      {/* Navegacion Mobile */}
+      {/* Navegacion version movil */}
       {menuOpen && (
         <nav className="md:hidden bg-white border-t border-gray-200 shadow-lg">
           <ul className="flex flex-col items-center space-y-4 py-4 text-gray-700 font-medium">
@@ -95,7 +95,7 @@ export default function siteHeader() {
             </li>
 
             <li>
-              <a href="#agendar" onClick={closeMenu} className="hover:text-blue-600">
+              <a href="#citas" onClick={closeMenu} className="hover:text-blue-600">
                 Agendar Cita
               </a>
             </li>
