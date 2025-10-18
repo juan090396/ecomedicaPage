@@ -2,7 +2,7 @@ import React from 'react'
 
 const doctorsData=[
   {
-    name: "Dr.Thais Suarez",
+    name: "Dra.Thais Suarez",
     specialty: "Ecografia - Cirugia General",
     description: "Especialista en ecografias y cirugias generales con mas de 10 años de experiencia.",
     available: "Previa Cita",
@@ -16,7 +16,7 @@ const doctorsData=[
     img:"",
   },
   {
-    name: "Dr. Marta Peña",
+    name: "Dra. Marta Peña",
     specialty: "ginecologia y Obstetricia",
     description: "Cuidado integral de la salud femenina.",
     available: "Lunes 10am - 1pm, Viernes 7am - 10pm",
