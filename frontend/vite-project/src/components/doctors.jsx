@@ -35,9 +35,11 @@ const doctors = () => {
   return (
     <section 
     id="doctores"
-    className='py-12 p-10 ml-16 md:py-24 lg:py-32 bg-white' >
+    className='py-12 p-10 ml-14  md:py-24 lg:py-32 bg-white' >
 
       <div className='container px-4 md:px-6' >
+        
+        {/* subtitulo*/}
         <div className='flex flex-col items-center justify-center space-y-4 text-center' >
           <div className='space-y-2' >
             <h2 className='text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl' >Nuestros Especialistas</h2>

@@ -4,6 +4,7 @@ import SiteFooter from './components/siteFooter'
 import AboutUs from './components/aboutUs'
 import Services from './components/services'
 import Doctors from './components/doctors'
+import Appointment from './components/appointment'
 import Testimonials from './components/testimonials'
 function App() {
   
@@ -15,6 +16,7 @@ function App() {
         <AboutUs/>
         <Services/>
         <Doctors/>
+        <Appointment/>
         <Testimonials/>
       </main>
       

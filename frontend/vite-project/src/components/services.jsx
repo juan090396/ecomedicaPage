@@ -42,7 +42,7 @@ const servicesData = [
 
 const services = () => {
   return (
-    <section className='py-12 p-10 ml-16 md:py-24 lg:py-32 bg-white' id='testimonios'  >
+    <section className='py-12 p-10 ml-14 md:py-24 lg:py-32 bg-white' id='servicios'  >
     
       <div className='container px-4 md:px-6' >
  

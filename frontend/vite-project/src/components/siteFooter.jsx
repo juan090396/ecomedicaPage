@@ -7,7 +7,7 @@ import { Mail, MapPin, Phone } from "lucide-react"
 const siteFooter = () => {
   return (
     
-      <footer className="bg-blue-900 text-white py-12 px-20">
+      <footer className="bg-blue-900 text-white py-12 px-20" id='contacto' >
         <div className="container px-4 md:px-6">
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
