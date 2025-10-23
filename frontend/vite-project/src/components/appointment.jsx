@@ -1,8 +1,36 @@
-import React from 'react'
+import React, { useState } from 'react'
+
+
+
+  
 
 const appointment = () => {
+
+const [formData, setFormData] = useState({
+    name: "",
+    last_name: "",
+    email: "",
+    phone: "",
+    doctors: "",
+    especialty: "",
+    date: "",
+    time: "",
+    message: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Datos del formulario:", formData);
+    // Aquí luego podrás hacer el POST al backend
+  };
+
+
   return (
-    <section className='py-12 p-10 ml-14 md:py-24 lg:py-32 bg-white' id='citas' >
+    <section className='py-12 md:py-24 bg-gray-50 flex flex-col items-center justify-center' id='citas' >
 
       <div className='container px-4 md:px-6'>
 
@@ -17,47 +45,123 @@ const appointment = () => {
         </div>
      {/* Formulario*/}
 
-       <div className='grid gap-6 mt-6 sm:grid-cols-2 lg:grid-cols-4 justify-items-center'>
-
-        <form>
-          <div className='grid gap-4' >
-
-            <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
+       <div className='flex justify-center mt-10'>
+        <form onSubmit={handleSubmit} className='bg-white p-8 rounded-xl shadow-md w-full max-w-2xl'  > 
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            
+            <div>
+              <label className='block text-sm font-medium text-gray-700 mb-1' >Nombre</label>
+              <input
+              type='text'
+              name='name'
+              value={formData.name}
+              onChange={handleChange}
+              placeholder='Ingrese su nombre'
+              className='w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+              required/>
+              </div>
               
-              <div className='space-y-2'>
-                <label htmlFor='nombre' >Nombre</label>
-                <input id='nombre' placeholder='Ingrese su nombre' required/>
+              <div>
+              <label className='block text-sm font-medium text-gray-700 mb-1' >Apellido</label>
+              <input
+              type='text'
+              name='last_name'
+              value={formData.last_name}
+              onChange={handleChange}
+              placeholder='Ingrese su apellido'
+              className='w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+              />
               </div>
-
-              <div className='space-y-2'>
-                <label htmlFor='apellido' >Apellido</label>
-                <input id='apellido' placeholder='Ingrese su apellido' required/>
+              
+              <div className='md:col-span-2'>
+                <label className='block text-sm font-medium text-gray-700 mb-1'>Correo Electrónico</label>
+                <input
+                type='email'
+                name='email'
+                value={formData.email}
+                onChange={handleChange}
+                placeholder='Ingrese su correo electrónico'
+                className='w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                required/>
               </div>
+              
+              <div className='md:col-span-2'>
+              <label className='block text-sm font-medium text-gray-700 mb-1'>Teléfono</label>
+              <input
+              type='tel'
+              name='phone'
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder='Ingrese su número de teléfono'
+              className='w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'/>
+              </div>
+              
+              <div className='md:col-span-2'>
+                <label className='block text-sm font-medium text-gray-700 mb-1'>Doctores</label>
+                <select
+                name='doctors'
+                value={formData.doctors}
+                onChange={handleChange}
+                className='w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                required>
+                  <option value=''>Seleccione un doctor</option>
+                  <option value='doctor1'>Dra.Thais Suarez</option>
+                  <option value='doctor2'>Dr. Joaquin Avile</option>
+                  <option value='doctor3'>Dra. Marta Peña</option>
+                  <option value='doctor4'>Dra. Isabel Medina</option>
+                </select>
+              </div>
+              
+              <div>
+              <label className='block text-sm font-medium text-gray-700 mb-1' >Fecha</label>
+              <input
+              type='date'
+              name='date'
+              value={formData.date}
+              onChange={handleChange}
+              className='w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+              required/>
+              </div>
+              
+              <div>
+              <label className='block text-sm font-medium text-gray-700 mb-1' >Hora</label>
+              <input
+              type='time'
+              name='time'
+              value={formData.time}
+              onChange={handleChange}
+              className='w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+              required/>
+              </div>
+        
 
+              <div className='md:col-span-2'>
+              <label className='block text-sm font-medium text-gray-700 mb-1' >Motivo de la consulta</label>
+              <textarea
+              name='message'
+              value={formData.message}
+              onChange={handleChange}
+              placeholder='Describa brevemente el motivo de su consulta'
+              className='w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+              rows='4'/>
+              </div>
             </div>
 
-            <div className='space-y-2'> 
-              <label htmlFor='email' >Correo Electrónico</label>
-              <input id='email' type='email' placeholder='Ingrese su correo electrónico, ejemplo@correo.com' required/>
-            </div>
+            <button
+            type='submit'
+            className='w-full mt-6 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition font-medium'
+            >
+              Agendar Cita
+            </button>
+          
+          <p className='text-center text-gray-500 text-sm mt-4'>  
+            Al agendar una cita, acepta nuestros términos y condiciones de servicio.
+          </p>
 
-            <div className='space-y-2' >
-              <label htmlFor='telefono' >Teléfono</label>
-              <input id='telefono' type='tel' placeholder='Ingrese su número de teléfono' required/>
-            </div>
 
-            <div className='space-y-2'>
-              <label htmlFor='doctores'>Doctores</label>
-              <select id='doctores' >
-                <option value='' >Seleccione un especialista</option>
-                <option value='dr1' >Dr. Juan Pérez - Cardiología</option>
-              </select>
-            </div>
-
-          </div>
         </form>
-
        </div>
+
       </div>
     </section>
   )
