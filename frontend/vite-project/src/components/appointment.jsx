@@ -1,9 +1,6 @@
 import React, { useState } from 'react'
 
 
-
-  
-
 const appointment = () => {
 
 const [formData, setFormData] = useState({
@@ -22,10 +19,54 @@ const [formData, setFormData] = useState({
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Datos del formulario:", formData);
-    // Aquí luego podrás hacer el POST al backend
+    
+    const appointmentData = {
+    name: formData.name,
+    last_name: formData.last_name,
+    phone: formData.phone,
+    email: formData.email,
+    date: formData.date,
+    time: formData.time,
+    message: formData.message,
+  };
+    
+    try {
+
+      const response = await fetch("http://localhost:5000/api/appointments/", {
+        method: "POST",
+        headers:{
+          "Content-Type": "application/json",
+        },body: JSON.stringify(appointmentData),})
+        {/* debo cambiar por formData cuando tenga los medicos y las especialidades en la base de datos*/}
+
+        if (response.ok){
+          const data = await response.json();
+          alert("Cita agendada con éxito");
+          console.log("respuesta del servidor:", data);
+
+          setFormData({
+            name: "",
+            last_name: "",
+            email: "",
+            phone: "",
+            doctors: "",
+            especialty: "",
+            date: "",
+            time: "",
+            message: "",
+          });
+        } else {
+          alert("Error al agendar la cita");
+          console.error("Error al registrar cita:", response.statusText);
+        }
+
+    } catch (error) { 
+      console.error("Error de conexión:", error);
+      alert("Error de conexión con el servidor");
+    }
+
   };
 
 
@@ -33,7 +74,6 @@ const [formData, setFormData] = useState({
     <section className='py-12 md:py-24 bg-gray-50 flex flex-col items-center justify-center' id='citas' >
 
       <div className='container px-4 md:px-6'>
-
         {/* subtitulo*/}
         <div className='flex flex-col items-center justify-center space-y-4 text-center' >
           <div className='space-y-2'>
@@ -44,7 +84,6 @@ const [formData, setFormData] = useState({
           </div>
         </div>
      {/* Formulario*/}
-
        <div className='flex justify-center mt-10'>
         <form onSubmit={handleSubmit} className='bg-white p-8 rounded-xl shadow-md w-full max-w-2xl'  > 
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -157,7 +196,6 @@ const [formData, setFormData] = useState({
           <p className='text-center text-gray-500 text-sm mt-4'>  
             Al agendar una cita, acepta nuestros términos y condiciones de servicio.
           </p>
-
 
         </form>
        </div>
