@@ -188,7 +188,7 @@ const [formData, setFormData] = useState({
 
             <button
             type='submit'
-            className='w-full mt-6 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition font-medium'
+            className='w-full mt-6 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition font-medium cursor-pointer '
             >
               Agendar Cita
             </button>
