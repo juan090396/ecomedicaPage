@@ -12,11 +12,11 @@ export const getAppointments = async (req, res) => {
 
 export const createAppointment = async (req, res) => {
   try {
-    const { name, last_name, phone, email, date, time, message } = req.body;
+    const { name, last_name, phone, email, date, time, message, doctor_id } = req.body;
 
     await db.query(
-      'INSERT INTO appointments (name, last_name, phone, email, date, time, message) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [name, last_name, phone, email,  date, time, message]
+      'INSERT INTO appointments (name, last_name, phone, email, date, time, message, doctor_id) VALUES (?, ?, ?, ?, ?, ?, ? ,?)',
+      [name, last_name, phone, email,  date, time, message, doctor_id]
     );
 
     res.status(201).json({ success: true, message: 'Cita agendada exitosamente' });

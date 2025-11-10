@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect} from 'react'
 
 
 const appointment = () => {
@@ -8,12 +8,27 @@ const [formData, setFormData] = useState({
     last_name: "",
     email: "",
     phone: "",
-    doctors: "",
-    especialty: "",
+    doctor_id: "",
     date: "",
     time: "",
     message: "",
   });
+
+  const [doctors, setDoctors] = useState([]);
+
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/doctors");
+        const data = await response.json();
+        console.log("Doctores cargados:", data);
+        setDoctors(data);
+      } catch (error) {
+        console.error("Error al cargar doctores:", error);
+      }
+    };
+    fetchDoctors();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,47 +37,35 @@ const [formData, setFormData] = useState({
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    const appointmentData = {
-    name: formData.name,
-    last_name: formData.last_name,
-    phone: formData.phone,
-    email: formData.email,
-    date: formData.date,
-    time: formData.time,
-    message: formData.message,
-  };
-    
     try {
 
       const response = await fetch("http://localhost:5000/api/appointments/", {
         method: "POST",
-        headers:{
-          "Content-Type": "application/json",
-        },body: JSON.stringify(appointmentData),})
-        {/* debo cambiar por formData cuando tenga los medicos y las especialidades en la base de datos*/}
+        headers:{"Content-Type": "application/json",},
+        body: JSON.stringify(formData),
+      })
+        
+      if (response.ok){
+        const data = await response.json();
+        alert("Cita agendada con éxito");
+        console.log("respuesta del servidor:", data);
 
-        if (response.ok){
-          const data = await response.json();
-          alert("Cita agendada con éxito");
-          console.log("respuesta del servidor:", data);
-
-          setFormData({
-            name: "",
-            last_name: "",
-            email: "",
-            phone: "",
-            doctors: "",
-            especialty: "",
-            date: "",
-            time: "",
-            message: "",
+        setFormData ({
+          name: "",
+          last_name: "",
+          email: "",
+          phone: "",
+          doctors_id: "",
+          date: "",
+          time: "",
+          message: "",
           });
         } else {
           alert("Error al agendar la cita");
           console.error("Error al registrar cita:", response.statusText);
         }
 
-    } catch (error) { 
+    }catch (error) { 
       console.error("Error de conexión:", error);
       alert("Error de conexión con el servidor");
     }
@@ -74,6 +77,7 @@ const [formData, setFormData] = useState({
     <section className='py-12 md:py-24 bg-gray-50 flex flex-col items-center justify-center' id='citas' >
 
       <div className='container px-4 md:px-6'>
+  
         {/* subtitulo*/}
         <div className='flex flex-col items-center justify-center space-y-4 text-center' >
           <div className='space-y-2'>
@@ -83,6 +87,7 @@ const [formData, setFormData] = useState({
             </p>
           </div>
         </div>
+
      {/* Formulario*/}
        <div className='flex justify-center mt-10'>
         <form onSubmit={handleSubmit} className='bg-white p-8 rounded-xl shadow-md w-full max-w-2xl'  > 
@@ -138,16 +143,17 @@ const [formData, setFormData] = useState({
               <div className='md:col-span-2'>
                 <label className='block text-sm font-medium text-gray-700 mb-1'>Doctores</label>
                 <select
-                name='doctors'
-                value={formData.doctors}
+                name='doctor_id'
+                value={formData.doctor_id}
                 onChange={handleChange}
                 className='w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
                 required>
                   <option value=''>Seleccione un doctor</option>
-                  <option value='doctor1'>Dra.Thais Suarez</option>
-                  <option value='doctor2'>Dr. Joaquin Avile</option>
-                  <option value='doctor3'>Dra. Marta Peña</option>
-                  <option value='doctor4'>Dra. Isabel Medina</option>
+                  {doctors.map((doctor) => (
+                    <option key={doctor.id} value={doctor.id}>
+                      {doctor.name}
+                    </option>
+                  ))}
                 </select>
               </div>
               
@@ -184,12 +190,12 @@ const [formData, setFormData] = useState({
               className='w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
               rows='4'/>
               </div>
+              
             </div>
 
             <button
             type='submit'
-            className='w-full mt-6 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition font-medium cursor-pointer '
-            >
+            className='w-full mt-6 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition font-medium cursor-pointer '>
               Agendar Cita
             </button>
           

@@ -42,7 +42,7 @@ const servicesData = [
 
 const services = () => {
   return (
-    <section className='py-12 p-10 ml-14 md:py-24 lg:py-32 bg-white' id='servicios'  >
+    <section className='py-12 md:py-24 bg-gray-50 flex flex-col items-center justify-center' id='servicios'  >
     
       <div className='container px-4 md:px-6' >
  
