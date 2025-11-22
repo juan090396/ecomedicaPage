@@ -1,35 +1,6 @@
 import React from 'react'
 
-const doctorsData=[
-  {
-    name: "Dra.Thais Suarez",
-    specialty: "Ecografia - Cirugia General",
-    description: "Especialista en ecografias y cirugias generales con mas de 10 años de experiencia.",
-    available: "Previa Cita",
-    img:"",
-  },
-  {
-    name: "Dr. Joaquin Avile",
-    specialty: "Medicina General",
-    description: "Atencion primaria y diagnostico de enfermedades comunes.",
-    available: "Previa Cita",
-    img:"",
-  },
-  {
-    name: "Dra. Marta Peña",
-    specialty: "ginecologia y Obstetricia",
-    description: "Cuidado integral de la salud femenina.",
-    available: "Lunes 10am - 1pm, Viernes 7am - 10pm",
-    img:"",
-  },
-  {
-    name: "Dra. Isabel Medina",
-    specialty: "Pediatria",
-    description: "Atencion medica para bebes, ninos y adolescentes.",
-    available: "Miercoles, 7am - 10 am, jueves 10am - 1pm",
-    img:"",
-  }
-]
+const doctorsData=[]
 
 const doctors = () => {
   return (
