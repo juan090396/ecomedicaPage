@@ -30,7 +30,7 @@ export default function Login() {
         <h1 className="text-3xl font-bold mb-1">Ecomedica Lab</h1>
         <p className="text-gray-500 mb-8">Panel de Administración</p>
 
-        {/* FORM */}
+        {/* Formulario de inicio de sesion */}
         <form onSubmit={handleSubmit} className="space-y-6 text-left">
           <div>
             <label className="block text-gray-700 text-sm font-medium mb-1">

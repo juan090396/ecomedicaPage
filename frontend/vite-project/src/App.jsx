@@ -9,7 +9,6 @@ import Login from './pages/logIn'
 function App() {
   
   return (
-
     <BrowserRouter>
       <Routes>
         <Route path='/' element= {<EcomedicaPage/>}  /> 
