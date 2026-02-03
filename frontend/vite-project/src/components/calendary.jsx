@@ -1,7 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
+import ModalCreateAppointment from "./modal";
 
 const Calendary = () => {
-  const [currentDate, setCurrentDate] = useState(new Date(2025, 10)); // Noviembre 2025
+  const [currentDate, setCurrentDate] = useState(new Date(2025, 10)); 
+
+  const [openModal, setOpenModal] = useState(false);
+  
+  const [appointments, setAppointments] = useState([]);
 
   const monthNames = [
     "Enero","Febrero","Marzo","Abril","Mayo","Junio",
@@ -32,14 +37,30 @@ const Calendary = () => {
     ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
   ];
 
+  //datos de citas  
+
+  useEffect(() => {
+      fetch(`http://localhost:5000/api/appointments/`)
+        .then(res => res.json())
+        .then(data => setAppointments(data));
+      }, [month, year]);
+
+
+
   return (
     <div className="bg-white shadow-sm rounded-lg p-5">
       {/* Título */}
+
       <div className="flex items-center justify-between mb-4">
         <h2 className="font-semibold text-lg">Calendario de Citas</h2>
-        <button className="px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700">
+
+        <button
+        onClick={() => setOpenModal(true)} 
+        className="px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700"
+        >
           + Nueva Cita
         </button>
+
       </div>
 
       {/* Controles del mes */}
@@ -94,6 +115,14 @@ const Calendary = () => {
           </div>
         ))}
       </div>
+
+      {openModal && (<ModalCreateAppointment
+      onClose={()=> setOpenModal(false)}
+      onCreated={()=>{
+        fetch("http://localhost:5000/api/appointments/")
+      }}/>
+      )}
+
     </div>
   );
 };

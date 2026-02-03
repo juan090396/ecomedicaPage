@@ -3,7 +3,7 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom'
 
 
 import EcomedicaPage from './pages/ecomedicaPage'
-import Dashboard from './pages/admin'
+import Dashboard from './pages/dashboard'
 import Login from './pages/logIn'
 
 function App() {
