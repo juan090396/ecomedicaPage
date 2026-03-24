@@ -3,7 +3,7 @@ import { db } from '../db/connection.js';
 //obtener datos
 export const getDoctors = async (req,res) => {
     try {
-      const [rows] = await db.query('SELECT id,name, description, availability, image_url FROM doctors');
+      const [rows] = await db.query('SELECT id,name, description, availability, image_url, phone, email FROM doctors');
       res.json(rows);
     } catch (error){
       console.error('Error al obtener doctores:', error);
@@ -13,9 +13,10 @@ export const getDoctors = async (req,res) => {
 //crear doctor
 export const createDoctors = async (req,res) =>{
   try {
-    const {name, description, availability, image_url} = req.body;
+    const {name, description, availability, image_url, phone, email} = req.body;
 
-    await db.query('INSERT INTO doctors (name, description, availability, image_url) VALUES (?, ?, ?, ?)', [name, description, availability, image_url])
+    await db.query('INSERT INTO doctors (name, description, availability, image_url, phone, email) VALUES (?, ?, ?, ?, ?, ?)',
+       [name, description, availability, image_url, phone, email])
 
     res.status(201).json({success:true, message: 'Doctor creado exitosamente'});
   } catch (error) {
@@ -43,30 +44,32 @@ export const deleteDoctors = async (req, res) => {
 };
 
   //actualizar doctor
-  export const updateDoctor = async (req, res) => {
+ export const updateDoctor = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, availability, image_url } = req.body;
+    const { name, description, availability, image_url, phone, email } = req.body;
 
     const [result] = await db.query(
       `UPDATE doctors
-      SET 
-        id = ?, 
-        name = ?, 
-        description = ?, 
-        availability = ?, 
-        image_url = ?`,
-      [name, description, availability, image_url, id]
+       SET 
+         name = ?, 
+         description = ?, 
+         availability = ?,
+         phone = ?,
+         email = ?,
+         image_url = ?
+       WHERE id = ?`,   // 👈 ESTE ES EL PROBLEMA
+      [name, description, availability, phone, email, image_url, id]
     );
-    
-      if(result.affectedRow === 0){
-        return res.status(400).json({message: "Doctor no encontrado" });
-      }
-        
-      res.json({ success: true, message: "Doctor actualizado correctamente" });
 
-    } catch (error) {
-      console.error("Error al actualizar doctor:", error);
-      res.status(500).json({ message: "Error al actualizar doctor" });
+    if (result.affectedRows === 0) { // 👈 también corregido (era affectedRow)
+      return res.status(404).json({ message: "Doctor no encontrado" });
     }
+
+    res.json({ success: true, message: "Doctor actualizado correctamente" });
+
+  } catch (error) {
+    console.error("Error al actualizar doctor:", error);
+    res.status(500).json({ message: "Error al actualizar doctor" });
   }
+};
