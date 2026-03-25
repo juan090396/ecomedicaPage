@@ -58,11 +58,11 @@ export const deleteDoctors = async (req, res) => {
          phone = ?,
          email = ?,
          image_url = ?
-       WHERE id = ?`,   // 👈 ESTE ES EL PROBLEMA
+       WHERE id = ?`,   
       [name, description, availability, phone, email, image_url, id]
     );
 
-    if (result.affectedRows === 0) { // 👈 también corregido (era affectedRow)
+    if (result.affectedRows === 0) {
       return res.status(404).json({ message: "Doctor no encontrado" });
     }
 

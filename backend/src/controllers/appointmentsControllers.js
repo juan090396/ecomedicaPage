@@ -16,11 +16,14 @@ export const createAppointment = async (req, res) => {
     const { name, last_name, phone, email, date, time, message, doctor_id } = req.body;
 
     await db.query(
-      'INSERT INTO appointments (name, last_name, phone, email, date, time, message, doctor_id) VALUES (?, ?, ?, ?, ?, ?, ? ,?)',
-      [name, last_name, phone, email,  date, time, message, doctor_id]
+      `INSERT INTO appointments 
+      (name, last_name, phone, email, date, time, message, doctor_id, status) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [name, last_name, phone, email, date, time, message, doctor_id, "scheduled"]
     );
 
     res.status(201).json({ success: true, message: 'Cita agendada exitosamente' });
+
   } catch (error) {
     console.error('Error al crear cita:', error); 
     res.status(500).json({ message: 'Error al crear cita' });
