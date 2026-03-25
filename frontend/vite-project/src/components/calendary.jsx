@@ -2,11 +2,10 @@ import React, { useState, useEffect} from "react";
 import ModalCreateAppointment from "./modal";
 
 const Calendary = () => {
-  const [currentDate, setCurrentDate] = useState(new Date(2025, 10)); 
-
+  const [currentDate, setCurrentDate] = useState(new Date()); 
   const [openModal, setOpenModal] = useState(false);
-  
   const [appointments, setAppointments] = useState([]);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const monthNames = [
     "Enero","Febrero","Marzo","Abril","Mayo","Junio",
@@ -26,31 +25,72 @@ const Calendary = () => {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
-  // Primer día del mes
-  const firstDay = new Date(year, month, 1).getDay(); // 0 = Dom
-  // Cantidad de días del mes
+  // Dias Del calendario
+  const firstDay = new Date(year, month, 1).getDay(); 
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  
-  // Crear arreglo con días vacíos + días reales
   const calendarDays = [
     ...Array(firstDay).fill(null),
     ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
   ];
 
-  //datos de citas  
-
+  //Obtener Citas
+  const fetchAppointments = async ()=>{
+    try {
+      const res= await fetch("http://localhost:5000/api/appointments/");
+      const data =await res.json();
+      setAppointments(data);
+      
+    } catch (error) {
+      console.error("Error al cargar citas:", error);
+    }
+  }
   useEffect(() => {
-      fetch(`http://localhost:5000/api/appointments/`)
-        .then(res => res.json())
-        .then(data => setAppointments(data));
+      fetchAppointments();
       }, [month, year]);
+  //filtra citas
+  const getAppointmentsForDay = (day)=>{
+    return appointments.filter((app)=>{
+      const date = new Date(app.date);
+      return (
+        date.getDate()=== day && date.getMonth() === month && date.getFullYear() === year
+      )
+    })
+  }
 
+  //Filtra citas por colores 
+  const getColor = (app)=>{
+    const today = new Date();
+    const appDate = new Date(app.date);
+    
+    today.setHours(0,0,0,0);
+    appDate.setHours(0,0,0,0);
+    if(appDate.getTime()=== today.getTime()){
+      return "bg-yellow-400"
+    }
+    switch(app.status){
+      case "scheduled":
+        return "bg-green-500";
 
+      case "completed":
+        return "bg-gray-500";
+
+      case "cancelled":
+        return "bg-red-500";
+      
+      case "no_show":
+        return "bg-gray-500";
+    }
+  }
 
   return (
     <div className="bg-white shadow-sm rounded-lg p-5">
-      {/* Título */}
 
+      { successMessage &&(
+        <div className="fixed top-5 right-5 bg-green-500 text-white px-4 py-3 rounded-lg shadow-lg z-50" >
+          {successMessage}
+        </div>
+      )}
+  
       <div className="flex items-center justify-between mb-4">
         <h2 className="font-semibold text-lg">Calendario de Citas</h2>
 
@@ -99,27 +139,31 @@ const Calendary = () => {
           >
             {day && <span className="text-gray-500 text-xs">{day}</span>}
 
-            {/* Ejemplo de eventos
-                todo Ajustar con lógica real luego
-            */}
-            {day === 19 && month === 10 && year === 2025 && (
-              <>
-                <div className="absolute bottom-2 left-1 right-1 bg-green-500 text-white text-xs px-2 py-1 rounded">
-                  María García — 10:00
-                </div>
-                <div className="absolute bottom-10 left-1 right-1 bg-yellow-500 text-white text-xs px-2 py-1 rounded">
-                  Carlos López — 11:30
-                </div>
-              </>
-            )}
+            {/*Citas del dia*/}
+            {day && getAppointmentsForDay(day).map((app, i) => (
+              <div
+               key={i}
+               className={`mt-1 text-white text-xs px-2 py-1 rounded ${getColor(app)}`}
+               >
+                {app.patient_name} -{" "}
+                {new Date(app.date).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})}
+              </div>
+            ))}
+
           </div>
         ))}
       </div>
-
+      {/*Modal*/}
       {openModal && (<ModalCreateAppointment
       onClose={()=> setOpenModal(false)}
       onCreated={()=>{
-        fetch("http://localhost:5000/api/appointments/")
+        setOpenModal(false);
+        fetchAppointments();
+        setSuccessMessage("Cita creada con éxito");
+
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 3000);
       }}/>
       )}
 
