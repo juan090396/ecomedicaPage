@@ -6,6 +6,8 @@ const Calendary = () => {
   const [openModal, setOpenModal] = useState(false);
   const [appointments, setAppointments] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
+  const [selectedAppointment, setSelectedAppointment] = useState(null); 
+  const [dayViewAppointments, setDayViewAppointments] = useState([null]);
 
   const monthNames = [
     "Enero","Febrero","Marzo","Abril","Mayo","Junio",
@@ -78,9 +80,14 @@ const Calendary = () => {
         return "bg-red-500";
       
       case "no_show":
-        return "bg-gray-500";
+        return "bg-orange-500";
     }
   }
+
+  const handleOpenDetail = (app) => {
+    setSelectedAppointment(app);
+    setOpenModal(true)
+  };
 
   return (
     <div className="bg-white shadow-sm rounded-lg p-5">
@@ -135,32 +142,85 @@ const Calendary = () => {
         {calendarDays.map((day, index) => (
           <div
             key={index}
-            className="h-32 border border-gray-200 p-2 text-xs text-gray-700 relative"
+            className="h-32 border border-gray-200 p-2 text-xs text-gray-700 relative overflow-hidden"
           >
             {day && <span className="text-gray-500 text-xs">{day}</span>}
 
-            {/*Citas del dia*/}
-            {day && getAppointmentsForDay(day).map((app, i) => (
-              <div
-               key={i}
-               className={`mt-1 text-white text-xs px-2 py-1 rounded ${getColor(app)}`}
-               >
-                {app.patient_name} -{" "}
-                {new Date(app.date).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})}
-              </div>
-            ))}
+      {/*Citas*/}
+      {day && (() => {
+        const dayAppointments = getAppointmentsForDay(day);
+        const visibleAppointments = dayAppointments.slice(0, 2);
+          return (
+          <> 
+          {/*Contador*/}
+          {dayAppointments.length > 2 && (
+          <button className="absolute top-1 right-1 text-[10px] bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-md font-bold hover:bg-blue-200 transition-colors cursor-pointer"
+          onClick= {() => setDayViewAppointments(dayAppointments)}
+          >
+            +{dayAppointments.length - 2}
+          </button>
+          )}
 
+      {/*Citas visibles*/}
+      {visibleAppointments.map((app, i) => (
+        <div
+          key={i}
+          onClick={() => handleOpenDetail(app)}
+          className={`mt-1 text-white text-xs px-2 py-1 rounded cursor-pointer hover:opacity-80 ${getColor(app)}`}
+        >
+
+          <div className="font-bold truncate" >{app.name} {app.last_name}</div>
+          <div>{app.time?.slice(0, 5)}</div>
+        </div>
+      ))}
+          </>); 
+  })()}
           </div>
         ))}
       </div>
+      {/*LISTADO DEL DÍA*/}
+      {dayViewAppointments && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]">
+          <div className="bg-white rounded-lg shadow-xl w-80 max-h-[80vh] flex flex-col">
+            <div className="p-4 border-b flex justify-between items-center">
+              <h3 className="font-bold text-gray-700">Citas del día</h3>
+              <button onClick={() => setDayViewAppointments(null)} className="text-gray-400 hover:text-gray-600">✕</button>
+            </div>
+            <div className="p-4 overflow-y-auto space-y-2">
+              {dayViewAppointments.map((app, i) => (
+                <div
+                  key={i}
+                  onClick={() => {
+                    handleOpenDetail(app);
+                    setDayViewAppointments(null); // Cerramos esta lista para ver el detalle
+                  }}
+                  className={`p-2 rounded-lg cursor-pointer text-white text-sm shadow-sm hover:scale-[1.02] transition-transform ${getColor(app)}`}
+                >
+                  <div className="flex justify-between font-bold">
+                    <span>{app.name} {app.last_name}</span>
+                    <span>{app.time?.slice(0, 5)}</span>
+                  </div>
+                  <div className="text-xs opacity-90">Estado: {app.status}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+
+      
       {/*Modal*/}
       {openModal && (<ModalCreateAppointment
-      onClose={()=> setOpenModal(false)}
+      appointment={selectedAppointment}
+      onClose={()=> {
+        setOpenModal(false);
+        setSelectedAppointment(null);
+      }}
       onCreated={()=>{
         setOpenModal(false);
         fetchAppointments();
         setSuccessMessage("Cita creada con éxito");
-
         setTimeout(() => {
           setSuccessMessage("");
         }, 3000);
